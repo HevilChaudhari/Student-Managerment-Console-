@@ -33,7 +33,7 @@ public class StudentRepository
         student.Grade = updatedStudent.Grade;
     }
 
-    public IReadOnlyList<Student> GetList()
+    public IReadOnlyList<Student> GetStudents()
     {
         return students;
     }
