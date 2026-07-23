@@ -2,7 +2,7 @@ namespace StudentManagement.Enums;
 
 public enum MainMenuOptions
 {
-    AddStudent,
+    AddStudent = 1,
     ViewStudents,
     SearchStudents,
     UpdateStudent,

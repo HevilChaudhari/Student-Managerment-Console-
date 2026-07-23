@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using StudentManagement.Models;
 using StudentManagement.Repositries;
 
@@ -49,5 +50,27 @@ public class StudentService
         return true;
     }
 
+    public bool ViewStudents(out IReadOnlyList<Student> students)
+    {
+        students = studentRepository.GetStudents();
 
+        if(students == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public bool SearchStudent(int id, out Student? student)
+    {
+        student = studentRepository.GetStudentById(id);
+
+        if(student is null)
+            return false;
+        
+        return true;
+    }
 }
