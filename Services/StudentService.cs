@@ -73,4 +73,17 @@ public class StudentService
         
         return true;
     }
+
+    public bool RemoveStudent(int id)
+    {
+        var student  = studentRepository.GetStudentById(id);
+
+        if(student is null)
+        {
+            return false;
+        }
+
+        studentRepository.Remove(student.Id);
+        return true;
+    }
 }

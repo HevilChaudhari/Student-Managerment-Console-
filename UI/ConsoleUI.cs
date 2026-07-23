@@ -87,7 +87,8 @@ public class ConsoleUI
                 return true;
             case MainMenuOptions.UpdateStudent:
                 return true;
-            case MainMenuOptions.DeleteStudent:
+            case MainMenuOptions.RemoveStudent:
+                RemoveStudent();
                 return true;
             case MainMenuOptions.Exit:
                 Console.WriteLine();
@@ -189,6 +190,27 @@ public class ConsoleUI
         else
         {
             Console.WriteLine("Student Not Found");
+        }
+    }
+
+    private void RemoveStudent()
+    {
+        Console.Write("Enter a student id to remove:");
+        string? idInput = Console.ReadLine();
+
+        if(string.IsNullOrWhiteSpace(idInput))
+        {
+            Console.WriteLine("Id is Invalid! Try Again Later");
+            return;
+        }
+
+        if(int.TryParse(idInput,out int id) && studentService.RemoveStudent(id))
+        {
+            Console.WriteLine("Student Removed Sucessfully");
+        }
+        else
+        {
+            Console.WriteLine("Student Failed to remove. No Id Found");
         }
     }
 }

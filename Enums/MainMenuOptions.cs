@@ -6,7 +6,7 @@ public enum MainMenuOptions
     ViewStudents,
     SearchStudents,
     UpdateStudent,
-    DeleteStudent,
+    RemoveStudent,
     Exit
 
 }
