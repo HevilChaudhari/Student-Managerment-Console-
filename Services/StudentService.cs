@@ -24,7 +24,7 @@ public class StudentService
         {
             return false;
         }
-        
+
         grade = char.ToUpperInvariant(grade);
 
         if (grade is not ('A' or 'B' or 'C' or 'D' or 'F'))
@@ -54,7 +54,7 @@ public class StudentService
     {
         students = studentRepository.GetStudents();
 
-        if(students == null)
+        if (students == null)
         {
             return false;
         }
@@ -68,22 +68,62 @@ public class StudentService
     {
         student = studentRepository.GetStudentById(id);
 
-        if(student is null)
+        if (student is null)
+        {
             return false;
-        
+        }
+
         return true;
     }
 
     public bool RemoveStudent(int id)
     {
-        var student  = studentRepository.GetStudentById(id);
+        var student = studentRepository.GetStudentById(id);
 
-        if(student is null)
+        if (student is null)
         {
             return false;
         }
 
         studentRepository.Remove(student.Id);
         return true;
+    }
+
+    public bool UpdateStudentData(int id,string? name, string? age, char grade)
+    {
+
+        Student? student = studentRepository.GetStudentById(id);
+
+
+        string updatedName = (student is not null) ? student.Name : string.Empty;
+        int updatedAge = (student is not null) ? student.Age : 0;
+        char updatedGrade = (student is not null) ? student.Grade : ' ';
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            updatedName = name;
+        }
+
+        if (int.TryParse(age, out int a) && a > 0)
+        {
+            updatedAge = a;
+        }
+
+        grade = char.ToUpperInvariant(grade);
+
+        if (grade is  ('A' or 'B' or 'C' or 'D' or 'F'))
+        {
+            updatedGrade = grade;
+        }
+
+        var updatedStudent = new Student
+        {
+           Id = id,
+           Name = updatedName,
+           Age = updatedAge,
+           Grade = updatedGrade  
+        };
+
+        return studentRepository.Update(updatedStudent);
     }
 }

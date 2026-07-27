@@ -24,7 +24,7 @@ public class ConsoleUI
                 if (Enum.IsDefined(typeof(MainMenuOptions), number))
                 {
                     MainMenuOptions selectedOption = (MainMenuOptions)number;
-                    if(!ExecuteChoice(selectedOption))
+                    if (!ExecuteChoice(selectedOption))
                         return;
                 }
                 else
@@ -86,6 +86,7 @@ public class ConsoleUI
                 SearchStudent();
                 return true;
             case MainMenuOptions.UpdateStudent:
+                UpdateStudentData();
                 return true;
             case MainMenuOptions.RemoveStudent:
                 RemoveStudent();
@@ -116,21 +117,22 @@ public class ConsoleUI
         Console.Write("Enter Grade : ");
         string? grade = Console.ReadLine();
 
-        while(string.IsNullOrWhiteSpace(name))
+        while (string.IsNullOrWhiteSpace(name))
         {
             Console.Write("Name Cannot Be empty!! Try again :");
-            name =  Console.ReadLine();
+            name = Console.ReadLine();
         }
 
         int newAgeInt = 0;
 
-        while(!int.TryParse(age,out newAgeInt))
+        while (!int.TryParse(age, out newAgeInt))
         {
             Console.Write("Age is Invalid!! Try again:");
             age = Console.ReadLine();
-        };
+        }
+        ;
 
-        while(string.IsNullOrWhiteSpace(grade) || grade.Length != 1)
+        while (string.IsNullOrWhiteSpace(grade) || grade.Length != 1)
         {
             Console.Write("Grade is Invalid!! Try again:");
             grade = Console.ReadLine();
@@ -138,7 +140,7 @@ public class ConsoleUI
 
         char newGrade = grade[0];
 
-        if(studentService.AddStudent(name,newAgeInt,newGrade))
+        if (studentService.AddStudent(name, newAgeInt, newGrade))
         {
             Console.WriteLine();
             Console.WriteLine("Student Added SucessFully");
@@ -151,16 +153,16 @@ public class ConsoleUI
 
     private void ViewStudent()
     {
-        if(studentService.ViewStudents(out IReadOnlyList<Student> students))
+        if (studentService.ViewStudents(out IReadOnlyList<Student> students))
         {
             Console.WriteLine();
-            if(students.Count <= 0)
+            if (students.Count <= 0)
             {
                 Console.WriteLine("No Data Found");
                 return;
             }
 
-            foreach(Student student in students)
+            foreach (Student student in students)
             {
                 Console.WriteLine($"{student.Id}\t{student.Name}\t{student.Age}\t{student.Grade}");
             }
@@ -176,14 +178,14 @@ public class ConsoleUI
         Console.Write("Enter Student ID to search:");
         string? id = Console.ReadLine();
         int idInt = 0;
-        if(!int.TryParse(id,out idInt))
+        if (!int.TryParse(id, out idInt))
         {
             Console.WriteLine();
             Console.WriteLine("Invalid Id. PLease try again!!");
-            return;  
+            return;
         }
 
-        if(studentService.SearchStudent(idInt, out Student? student))
+        if (studentService.SearchStudent(idInt, out Student? student))
         {
             Console.WriteLine("Student Found");
         }
@@ -198,19 +200,69 @@ public class ConsoleUI
         Console.Write("Enter a student id to remove:");
         string? idInput = Console.ReadLine();
 
-        if(string.IsNullOrWhiteSpace(idInput))
+        if (string.IsNullOrWhiteSpace(idInput))
         {
             Console.WriteLine("Id is Invalid! Try Again Later");
             return;
         }
 
-        if(int.TryParse(idInput,out int id) && studentService.RemoveStudent(id))
+        if (int.TryParse(idInput, out int id) && studentService.RemoveStudent(id))
         {
             Console.WriteLine("Student Removed Sucessfully");
         }
         else
         {
             Console.WriteLine("Student Failed to remove. No Id Found");
+        }
+    }
+
+    private void UpdateStudentData()
+    {
+        Console.Write("Please Enter Student ID:");
+        string? idInput = Console.ReadLine();
+
+        if (!int.TryParse(idInput, out int id))
+        {
+            PrintInvalidInput();
+            return;
+        }
+
+        if (id <= 0)
+        {
+            Console.WriteLine("ID is Invalid!!");
+            return;
+        }
+
+        if (studentService.SearchStudent(id, out Student? student))
+        {
+            Console.WriteLine();
+            Console.WriteLine("Student Found!!");
+            Console.WriteLine("Current Data");
+            Console.WriteLine();
+            Console.WriteLine($"{student?.Id}\t{student?.Name}\t{student?.Age}\t{student?.Grade}");
+
+            Console.WriteLine();
+            Console.Write("Enter new Name(Leave empty if you don't want to update:");
+            string? newNameInput = Console.ReadLine();
+            Console.Write("Enter new Age(Leave empty if you don't want to update:");
+            string? newAgeInput = Console.ReadLine();
+            Console.Write("Enter new Grade(Leave empty if you don't want to update:");
+            string? newGradeInput = Console.ReadLine();
+
+            char grade = (!string.IsNullOrWhiteSpace(newGradeInput) && 
+                        newGradeInput.Length == 1) ? newGradeInput[0] : ' ';
+            if (studentService.UpdateStudentData(student.Id,newNameInput,newAgeInput,grade))
+            {
+                Console.WriteLine("Student Data Updated SUcessfully");
+            }
+            else
+            {
+                Console.WriteLine("Student Data Failed to update");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No Student Found");
         }
     }
 }

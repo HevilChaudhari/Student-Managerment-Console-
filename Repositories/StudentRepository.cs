@@ -21,16 +21,17 @@ public class StudentRepository
         students.RemoveAll(x => x.Id == id);
     }
 
-    public void Update(Student updatedStudent)
+    public bool Update(Student updatedStudent)
     {
         Student? student = students.Find(x => x.Id == updatedStudent.Id);
 
         if(student == null)
-            return;
+            return false;
 
-        student.Name = updatedStudent.Name;
+        student.Name =  updatedStudent.Name;
         student.Age = updatedStudent.Age;
         student.Grade = updatedStudent.Grade;
+        return true;
     }
 
     public IReadOnlyList<Student> GetStudents()
@@ -42,9 +43,4 @@ public class StudentRepository
     {
         return students.FirstOrDefault(x => x.Id == id);
     }
-
-public bool Contains(int id)
-{
-    return students.Any(x => x.Id == id);
-}
 }
